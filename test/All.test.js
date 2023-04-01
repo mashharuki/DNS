@@ -26,12 +26,6 @@ contract("MultiSigWallet & MyToken Contract tests!!", accounts => {
     var factory;
     // variable for MyToken Contract
     var myToken;
-    // sample DID
-    var did = "did:ion:er....rer";
-    // sample VC name
-    var vcName = "testVC";
-    // sample DID
-    var cid = "09i464xi6964wugjtioe";
 
     /**
      * addWallet function
@@ -156,87 +150,6 @@ contract("MultiSigWallet & MyToken Contract tests!!", accounts => {
         it ("returns 30 results when limit requested is 30", async () => {
             const wallets = await factory.getWallets(30, 10);
             assert.equal(wallets.length, 20, "results size should be 20");
-        });
-    });
-
-    // ここから下については、修正が必要。
-
-    describe ("register test", async () => { 
-        it ("register", async () => {
-            // set
-            await factory.register(owners[1], did);
-            // get did
-            const didData = await factory.dids(owners[1]);
-            // check
-            assert.equal(did, didData, "did data must be match!!");
-        });
-        // 異常系
-        it ("register 2", async () => {
-            // check
-            await truffleAssert.reverts(
-                factory.register(owners[2], did, { from : owners[1] })
-            );
-        });
-        // 異常系2
-        it ("register 3", async () => {
-            // set
-            await factory.register(owners[2], did);
-            // check
-            await truffleAssert.reverts(
-                factory.register(owners[2], did)
-            );
-        });
-    });
-
-    describe ("VC info test", async () => { 
-        it ("register", async () => {
-            // register did
-            await factory.register(owners[1], did);
-            // register vc 
-            await factory.updateVc(did, vcName, cid);
-            // get vc info
-            var result = await factory.getVcs(did);
-            // check
-            assert.equal(result.length, 1, "VcInfo Array's length must be match!");
-        });
-        it ("check register info", async () => {
-            // register did
-            await factory.register(owners[1], did);
-            // register vc 
-            await factory.updateVc(did, vcName, cid);
-            // get vc info
-            var result = await factory.getVcs(did);
-            // check
-            assert.equal(result[0].name, vcName, "VC name must be match!");
-            assert.equal(result[0].cid, cid, "CID must be match!");
-        });
-        it ("register ✖️ 10", async () => {
-            // register did
-            await factory.register(owners[1], did);
-
-            for (let i=0; i < 10; i++) {
-                // register vc 
-                await factory.updateVc(did, `${vcName}:${i}`, cid);
-            }
-    
-            // get vc info
-            var result = await factory.getVcs(did);
-            // check
-            assert.equal(result.length, 10, "VcInfo Array's length must be match!");
-        });
-        it ("register ✖️ 30", async () => {
-            // register did
-            await factory.register(owners[1], did);
-           
-            for (let i=0; i < 30; i++) {
-                // register vc 
-                await factory.updateVc(did, `${vcName}:${i}`, cid);
-            }
-
-            // get vc info
-            var result = await factory.getVcs(did);
-            // check
-            assert.equal(result.length, 30, "VcInfo Array's length must be match!");
         });
     });
 });

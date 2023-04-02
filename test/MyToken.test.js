@@ -5,6 +5,7 @@ chai.use(require("chai-bn")(BN));
 
 // MyToken コントラクトテスト用のコード
 const MyToken = artifacts.require("MyToken");
+const truffleAssert = require("truffle-assertions");
 
 contract("MyToken Contract test", accounts => {
     // トークン名
@@ -94,6 +95,43 @@ contract("MyToken Contract test", accounts => {
             await myToken.transferFrom(owner, bob, 6000, {from: alice});
             const balance2 = await myToken.balanceOf(bob);
             assert.equal(balance2, 6000, "transfered amount should match");
+        });
+    });
+
+    describe ("score test", () => {
+        it("update socre", async () => {
+            // update
+            await myToken.updateScore(accounts[0], 10000);
+            // get score
+            const socre = await myToken.getScore(accounts[0]);
+            // check
+            assert.equal(10000, socre, "score should be match");
+        });
+        it("update socre ✖️ 10", async () => {
+            // update
+            for (let i=0; i < 10; i++) {
+                await myToken.updateScore(accounts[0], 10000);
+            };
+            // get score
+            const socre = await myToken.getScore(accounts[0]);
+            // check
+            assert.equal(100000, socre, "score should be match");
+        });
+        it("update socre ✖️ 30", async () => {
+            // update
+            for (let i=0; i < 30; i++) {
+                await myToken.updateScore(accounts[0], 10000);
+            };
+            // get score
+            const socre = await myToken.getScore(accounts[0]);
+            // check
+            assert.equal(300000, socre, "score should be match");
+        });
+        it("【error】update socre", async () => {
+            // update
+            await truffleAssert.reverts(
+                myToken.updateScore(accounts[0], 10000, { from: accounts[1] })
+            );
         });
     });
 });

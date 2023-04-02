@@ -145,60 +145,26 @@ contract("DNS Contract tests!!", accounts => {
             });
       });
 
-      // ここから下については、修正が必要。
-      /*
-       
-
-      describe ("VC info test", async () => { 
-            it ("register", async () => {
-                  // register did
-                  await factory.register(owners[1], did);
-                  // register vc 
-                  await factory.updateVc(did, vcName, cid);
-                  // get vc info
-                  var result = await factory.getVcs(did);
+      /**
+       * get all names test code
+       */
+      describe ("get all names test", async () => { 
+            it ("get all names", async () => {
+                  // set
+                  await dns.register(name, did, accounts[0]);
+                  // get all name 
+                  const allNames = await dns.getAllNames();
                   // check
-                  assert.equal(result.length, 1, "VcInfo Array's length must be match!");
+                  assert.equal(1, allNames.length, "names length must be match!!");
             });
-            it ("check register info", async () => {
-                  // register did
-                  await factory.register(owners[1], did);
-                  // register vc 
-                  await factory.updateVc(did, vcName, cid);
-                  // get vc info
-                  var result = await factory.getVcs(did);
+            it ("get all names ✖️ 2 ", async () => {
+                  // set
+                  await dns.register(name, did, accounts[0]);
+                  await dns.register(name, did, accounts[1]);
+                  // get all name 
+                  const allNames = await dns.getAllNames();
                   // check
-                  assert.equal(result[0].name, vcName, "VC name must be match!");
-                  assert.equal(result[0].cid, cid, "CID must be match!");
-            });
-            it ("register ✖️ 10", async () => {
-                  // register did
-                  await factory.register(owners[1], did);
-
-                  for (let i=0; i < 10; i++) {
-                        // register vc 
-                        await factory.updateVc(did, `${vcName}:${i}`, cid);
-                  }
-            
-                  // get vc info
-                  var result = await factory.getVcs(did);
-                  // check
-                  assert.equal(result.length, 10, "VcInfo Array's length must be match!");
-            });
-            it ("register ✖️ 30", async () => {
-                  // register did
-                  await factory.register(owners[1], did);
-                  
-                  for (let i=0; i < 30; i++) {
-                        // register vc 
-                        await factory.updateVc(did, `${vcName}:${i}`, cid);
-                  }
-
-                  // get vc info
-                  var result = await factory.getVcs(did);
-                  // check
-                  assert.equal(result.length, 30, "VcInfo Array's length must be match!");
+                  assert.equal(2, allNames.length, "names length must be match!!");
             });
       });
-      */
 });

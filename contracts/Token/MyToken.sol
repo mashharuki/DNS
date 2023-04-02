@@ -19,63 +19,60 @@ contract MyToken is
     ERC20Permit,
     ERC20Votes
 {
-    // トークン名
+    // token
     string tokenName;
-    // シンボル名
+    // symbol
     string tokenSymbol;
 
+    mapping(address => uint) public scores;
+
     /**
-     * コンストラクター
-     * @param _name トークン名
-     * @param _symbol シンボル名
+     * constructor
+     * @param _name token name
+     * @param _symbol symbol
      */
     constructor(string memory _name, string memory _symbol)
         ERC20(_name, _symbol)
         ERC20Permit(_name)
     {
-        // トークン名とシンボル名を設定する
+        // set
         tokenName = _name;
         tokenSymbol = _symbol;
     }
 
     /**
-     * トークンを停止するための関数
+     * pause function
      */
     function pause() public onlyOwner {
         _pause();
     }
 
     /**
-     * 停止状態を解除するための関数
+     * unpause function
      */
     function unpause() public onlyOwner {
         _unpause();
     }
 
     /**
-     * トークンを発行する関数
-     * @param to 発行先アドレス
-     * @param amount 発行数
+     * mint function
+     * @param to address
+     * @param amount amount
      */
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
 
     /**
-     * トークンを償却する関数
-     * @param to 発行先アドレス
-     * @param amount 発行数
+     * burn
+     * @param to address
+     * @param amount amount
      */
     function burnToken(address to, uint256 amount) public onlyOwner {
         _burn(to, amount);
     }
 
-    /**
-     * トークン移転用の関数
-     * @param from 発行元アドレス
-     * @param to 発行先アドレス
-     * @param amount 発行数
-     */
+    
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -84,12 +81,6 @@ contract MyToken is
         super._beforeTokenTransfer(from, to, amount);
     }
 
-    /**
-     * トークン移転用の関数
-     * @param from 発行元アドレス
-     * @param to 発行先アドレス
-     * @param amount 発行数
-     */
     function _afterTokenTransfer(
         address from,
         address to,
@@ -98,9 +89,6 @@ contract MyToken is
         super._afterTokenTransfer(from, to, amount);
     }
 
-    /**
-     * 発行用の関数
-     */
     function _mint(address to, uint256 amount)
         internal
         override(ERC20, ERC20Votes)
@@ -108,13 +96,30 @@ contract MyToken is
         super._mint(to, amount);
     }
 
-    /**
-     * 償却用の関数
-     */
     function _burn(address account, uint256 amount)
         internal
         override(ERC20, ERC20Votes)
     {
         super._burn(account, amount);
+    }
+
+    /**
+     * getScore function
+     * @param addr address
+     */
+    function getScore(address addr) public view returns (uint) {
+        return scores[addr];
+    }
+
+    /**
+     * updateScore function
+     * @param addr address
+     * @param point point to update score
+     */
+    function updateScore(address addr, uint point) public onlyOwner {
+        // get current score
+        uint oldScore = scores[addr];
+        uint newScore = oldScore + point;
+        scores[addr] = newScore;
     }
 }

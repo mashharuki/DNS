@@ -71,7 +71,7 @@ contract DNS is ERC721URIStorage {
         string calldata name,
         string calldata did,
         address to
-    ) public payable {
+    ) public {
         // check
         require(valid(name), "invalid domain name check length");
         require(!isRegistered[to], "This address is already registered!!");

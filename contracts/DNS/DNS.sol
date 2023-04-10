@@ -6,20 +6,15 @@ import {Base64} from "./../lib/Base64.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "truffle/console.sol";
+import "./../interface/IDNS.sol";
 
 /**
  * DNS(DID Name Servivce) Contract
  */
-contract DNS is ERC721URIStorage {
+contract DNS is ERC721URIStorage, IDNS {
     // tokenID
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-
-    // Verifiable Credentials
-    struct VcInfo {
-        string name;
-        string cid;
-    }
 
     // Image data
     string svgPartOne =

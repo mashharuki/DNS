@@ -26,6 +26,10 @@ contract MyToken is
 
     mapping(address => uint) public scores;
 
+    event TokenCreated(string name, string symbol);
+    event balanceChanged(address to, uint256 amount, uint balanceOf);
+    event UpdateScore(address to, uint score);
+
     /**
      * constructor
      * @param _name token name
@@ -38,6 +42,8 @@ contract MyToken is
         // set
         tokenName = _name;
         tokenSymbol = _symbol;
+
+        emit TokenCreated(_name, _symbol);
     }
 
     /**
@@ -61,6 +67,7 @@ contract MyToken is
      */
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
+        emit balanceChanged(to, amount, balanceOf(to));
     }
 
     /**
@@ -70,6 +77,7 @@ contract MyToken is
      */
     function burnToken(address to, uint256 amount) public onlyOwner {
         _burn(to, amount);
+        emit balanceChanged(to, amount, balanceOf(to));
     }
 
     
@@ -121,5 +129,7 @@ contract MyToken is
         uint oldScore = scores[addr];
         uint newScore = oldScore + point;
         scores[addr] = newScore;
+
+        emit UpdateScore(addr, newScore);
     }
 }
